@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" initial-scale="1" />
+  <style>
+    html {
+      min-height: 100%;
+    }
+
+    body {
+      height: 100%;
+      min-height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 0rem;
+      overflow: hidden;
+    }
+
+    .score-cont {
+      width: 100%;
+      max-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: whitesmoke;
+      margin-bottom: 0.4rem;
+      font-family: "Arial";
+      font-size: 1rem;
+      overflow: hidden;
+    }
+
+    .score-cont div {
+      width: 90px;
+      height: 70px;
+      background: black;
+      color: white;
+      font-size: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .score-cont p {
+      font-size: 30px;
+    }
+
+    .score-cont small {
+      z-index: 5;
+    }
+
+    .player1-cont::after,
+    .player2-cont::after {
+      content: "";
+      width: 90px;
+      background: black;
+      position: absolute;
+      animation: godown 0.2s ease-in-out;
+      height: 0;
+      top: 0;
+      left: 0;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes godown {
+      0% {
+        border-bottom: 1px solid white;
+        height: -70px;
+      }
+
+      50% {
+        height: 70px;
+        background: black;
+        border-bottom: 1px solid white;
+      }
+
+      95% {
+        height: 70px;
+        background: black;
+        border-bottom: 1px solid white;
+      }
+
+      100% {
+        height: 65px;
+        background: transparent;
+        border-bottom: none;
+      }
+    }
+
+    .box-cont {
+      background: black;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      width: 300px;
+      height: 300px;
+      grid-gap: 1px;
+      box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.5),
+        2px 3px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .box {
+      background: whitesmoke;
+      color: black;
+      width: 100%;
+      height: 100px;
+      font-size: 3rem;
+      font-family: "Century Gothic";
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .win {
+      background-color: greenyellow !important;
+    }
+
+    .info,
+    .vic-box {
+      margin: 0.4rem 0;
+      font-size: 1.5rem;
+      font-family: "Century Gothic";
+      /* text-transform: capitalize; */
+    }
+
+    h2 {
+      font-family: "Century Gothic";
+      margin: 1rem 0 1rem 0rem;
+      font-size: 1.5rem;
+    }
+
+    button.reset {
+      padding: 0.8rem 1.7rem;
+      border: none;
+      background: black;
+      color: white;
+      font-size: 0.9rem;
+      margin-top: 0.7rem;
+      border-radius: 5px;
+    }
+
+    .front-cover-cont .intro {
+      text-align: center;
+      font-size: 1.5rem;
+      font-family: "Arial";
+      margin-bottom: 0;
+    }
+
+    button.begin {
+      display: block;
+      padding: 0.8rem 1.7rem;
+      border: none;
+      background: black;
+      margin: 1rem auto;
+      font-size: 0.9rem;
+      color: white;
+      font-family: "Century Gothic";
+      width: 40%;
+      cursor: pointer;
+    }
+
+    .front-cover-cont {
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      padding-top: 2rem;
+      position: absolute;
+      background: whitesmoke;
+      font-family: "Century Gothic";
+      z-index: 2;
+    }
+
+    .hidden {
+      left: -50000px;
+      transition: all 5s ease-in;
+    }
+
+    h1 {
+      font-size: 4.5rem;
+      text-align: center;
+      margin-bottom: 0;
+      color: whitesmoke;
+      text-shadow: 1px 1px 1px orange, -1px -1px 1px black;
+    }
+
+    .input-cont {
+      width: 100%;
+      display: flex;
+      padding: 1.8rem 0 0.8rem;
+      flex-direction: column;
+    }
+
+    .input-flex {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    input {
+      width: 50%;
+      border: none;
+      padding: 0.5rem;
+      margin: 0.5rem;
+      border-radius: 5px;
+    }
+
+    small {
+      display: block;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      margin-bottom: 5px;
+      font-family: "Arial";
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    .preview-cont {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+    }
+
+    .preview-cont p {
+      font-size: small;
+      color: black;
+    }
+
+    @media screen and (max-width: 500px) {
+      .score-cont {
+        height: 50px;
+      }
+
+      .score-cont p {
+        font-size: 1rem;
+      }
+
+      .score-cont div {
+        width: 60px;
+        height: 50px;
+        font-size: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .player1-cont::after,
+      .player2-cont::after {
+        width: 60px;
+        height: 50px !important;
+      }
+
+      .box-cont {
+        width: 250px;
+        height: 250px;
+        overflow: hidden;
+      }
+
+      /* .box-cont::after {
+            width: 200px;
+            height: 200px;
+        } */
+      .box {
+        height: 82px;
+        font-size: 2rem;
+        outline: none;
+      }
+
+      button.reset {
+        padding: 0.4rem 1.2rem;
+        font-size: 0.8rem;
+      }
+
+      .info,
+      .vic-box {
+        margin: 0.4rem 0;
+        font-size: 1rem;
+        font-family: "Arial";
+      }
+
+      button.begin {
+        padding: 0.5rem 0;
+        font-size: 0.8rem;
+        width: 25%;
+      }
+
+      .front-cover-cont .intro {
+        font-size: 0.8rem;
+      }
+
+      .front-cover-cont h1 {
+        font-size: 3rem;
+      }
+    }
+
+    .score-name {
+      width: 100%;
+      background-color: transparent;
+      display: flex;
+    }
+
+    .score-name div {
+      width: 50%;
+      font-family: "Calibri Light";
+      padding: 0.3rem 2rem;
+      text-transform: capitalize;
+    }
+
+    .score-name div:last-child {
+      width: 50%;
+      display: flex;
+      justify-content: flex-end;
+    }
+  </style>
+  <title>X | O</title>
+</head>
+
+<body>
+  <div class="front-cover-cont">
+    <h1>
+      X
+      <span style="color: black">&amp;
+        <span><span style="
+                color: whitesmoke;
+                text-shadow: 1px 1px 2px black, -1px -1px 2px orange;
+              ">
+            O
+          </span></span></span>
+    </h1>
+    <p class="intro">New Game</p>
+    <div class="input-cont">
+      <div class="preview-cont">
+        <p id="user1-preview">-</p>
+        <p>vs</p>
+        <p id="user2-preview">-</p>
+      </div>
+      <div class="input-flex">
+        <input type="text" placeholder="Player 1 name" id="user1" maxlength="6" />
+        <input type="text" placeholder="Player 2 name" id="user2" maxlength="6" />
+      </div>
+    </div>
+    <button class="begin" onclick="begin()">Begin</button>
+    <button class="begin" onclick="onePlayer()">One Player</button>
+  </div>
+  <div class="score-cont">
+    <div style="position: relative">
+      <div class="player1-score player1-cont">0</div>
+      <small class="player-1-name"></small>
+    </div>
+    <p id="">Round <span id="rounds">1</span></p>
+    <div style="position: relative">
+      <div class="player2-score">0</div>
+    </div>
+  </div>
+  <div class="score-name">
+    <div class="player-one-name"></div>
+    <div class="player-two-name"></div>
+  </div>
+  <div class="info"></div>
+  <div class="vic-box"></div>
+  <div style="position: relative; overflow: hidden">
+    <div class="box-cont">
+      <div class="box" id="1"></div>
+      <div class="box" id="2"></div>
+      <div class="box" id="3"></div>
+      <div class="box" id="4"></div>
+      <div class="box" id="5"></div>
+      <div class="box" id="6"></div>
+      <div class="box" id="7"></div>
+      <div class="box" id="8"></div>
+      <div class="box" id="9"></div>
+    </div>
+  </div>
+  <button class="reset" onclick="reset()">Reset</button>
+  <button class="reset" onclick="window.location.reload()">New Game</button>
+  <small>Powered by TeeTech © 2022</small>
+
+  <script>
+    let input1 = document.querySelector("#user1");
+    let input2 = document.querySelector("#user2");
+    let preview1 = document.querySelector("#user1-preview");
+    let preview2 = document.querySelector("#user2-preview");
+    let victoryBox = document.querySelector(".vic-box");
+    let box = document.querySelectorAll(".box");
+    let score1 = document.querySelector(".player1-score");
+    let score2 = document.querySelector(".player2-score");
+    let infoBox = document.querySelector(".info");
+    let roundsCont = document.getElementById('rounds');
+    let isComputer = false;
+    let user1;
+    let user2;
+    let beginState = false;
+    let currentPlayer = Math.floor(Math.random() * 3);
+    currentPlayer === 0 ? (currentPlayer += 1) : currentPlayer;
+    let symbol = ["", "X", "O"];
+    let currentSymbol;
+    let boardScores = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let boardSamples = [
+      [1, 2, 3],
+      [1, 4, 7],
+      [7, 8, 9],
+      [3, 6, 9],
+      [4, 5, 6],
+      [1, 5, 9],
+      [3, 5, 7],
+      [2, 5, 8],
+    ];
+    let boardArray = [];
+    let player1Nums = [];
+    let player2Nums = [];
+    let scores = ["", 0, 0];
+    let compTempNum = [];
+    let first = true;
+    const BOARD_TOTAL = 9;
+    let rounds_played = 1
+    let two_ways_alert = 0;
+    
+    input1.addEventListener("input", (e) => {
+      preview1.innerText = e.target.value;
+      user1 = e.target.value;
+      showCurrentPlayer(currentPlayer, user1, user2);
+    });
+
+    input2.addEventListener("input", (e) => {
+      preview2.innerText = e.target.value;
+      user2 = e.target.value;
+      showCurrentPlayer(currentPlayer, user1, user2);
+    });
+
+    user1 = user1 || "Player 1";
+    user2 = user2 || "Player 2";
+
+    roundsCont.textContent = rounds_played;
+    let onePlayer = () => {
+      isComputer = true;
+      user2 = "A.I Jeff";
+      input2.style.display = "none";
+      preview2.innerText = user2;
+    };
+
+    function begin() {
+      document
+        .getElementsByClassName("front-cover-cont")[0]
+        .classList.add("hidden");
+      document.getElementsByClassName("player-one-name")[0].innerHTML = user1;
+      document.getElementsByClassName("player-two-name")[0].innerHTML = user2;
+      beginState = true;
+      showCurrentPlayer(currentPlayer, user1, user2);
+      if (currentPlayer == 2 && isComputer && beginState) {
+        computerPlay();
+      }
+    }
+
+    let showCurrentPlayer = (currentPlayer, player1, player2) => {
+      currentPlayer == 1
+        ? (infoBox.innerText = `${player1}${player1.includes("Player") ? "" : "'s"
+          } turn`)
+        : (infoBox.innerText = `${player2}${player2.includes("Player") ? "" : "'s"
+          } turn`);
+    };
+
+    showCurrentPlayer(currentPlayer, user1, user2);
+
+    function updateCurrentPlayer(current, user) {
+      currentPlayer = parseInt(current);
+      infoBox.innerText = `${user}${user2.includes("Player") ? "" : "'s"
+        } turn`;
+      if (currentPlayer == 2 && isComputer) {
+        computerPlay();
+      }
+    }
+
+    let reset = () => {
+      player1Nums = [];
+      player2Nums = [];
+      boardArray = [];
+      rounds_played = 0
+      first = true;
+      scores = ["", 0, 0];
+      score1.innerText = scores[1];
+      score2.innerText = scores[2];
+      first = true;
+      updateCurrentPlayer(1, user1, user2);
+      rounds_played = 0
+      setTimeout(() => {
+        boardArray = [];
+        player1Nums = [];
+        player2Nums = [];
+        for (i = 0; i < box.length; i++) {
+          box[i].innerText = "";
+          box[i].setAttribute("data-id", "");
+          box[i].dataset.id = "";
+          box[i].removeAttribute("data-id");
+          setBoardArrayStatus(box[i].getAttribute("id"), false);
+        }
+        victoryBox.style.display = "none";
+        roundsCont.textContent = rounds_played;
+      }, 500);
+      setTimeout(() => {
+        infoBox.style.display = "block";
+      }, 500);
+    };
+
+    let refresh = () => {
+      player1Nums = [];
+      player2Nums = [];
+      boardArray = [];
+      first = true;
+      ++rounds_played;
+      updateCurrentPlayer(1);
+      setTimeout(() => {
+        boardArray = [];
+        player1Nums = [];
+        player2Nums = [];
+        first = true;
+        for (i = 0; i < box.length; i++) {
+          box[i].innerText = "";
+          box[i].setAttribute("data-id", "");
+          box[i].dataset.id = "";
+          box[i].removeAttribute("data-id");
+          setBoardArrayStatus(box[i].getAttribute("id"), false);
+        }
+        victoryBox.style.display = "none";
+        roundsCont.textContent = rounds_played;
+      }, 500);
+      setTimeout(() => {
+        infoBox.style.display = "block";
+      }, 500);
+    };
+    //refresh()
+
+    function updateScores(player, classNum) {
+      document.getElementById(`${classNum[0]}`).classList.add("win");
+      document.getElementById(`${classNum[1]}`).classList.add("win");
+      document.getElementById(`${classNum[2]}`).classList.add("win");
+      victoryBox.style.display = "block";
+      infoBox.style.display = "none";
+      scores[player] += 1;
+      score1.innerText = scores[1];
+      score2.innerText = scores[2];
+      player == 1 && score1.classList.add(`player1-cont`);
+      player == 2 && score2.classList.add(`player2-cont`);
+      setTimeout(() => {
+        //document.getElementsByClassName('box-cont')[0].classList.remove("h" + classNum.join(""))
+        document.getElementById(`${classNum[0]}`).classList.remove("win");
+        document.getElementById(`${classNum[1]}`).classList.remove("win");
+        document.getElementById(`${classNum[2]}`).classList.remove("win");
+        player == 1 && score1.classList.remove(`player1-cont`);
+        player == 2 && score2.classList.remove(`player2-cont`);
+      }, 500);
+      refresh();
+    }
+
+    let checkIfEmpty = (elem) => {
+      return elem.getAttribute("data-id");
+    };
+
+    function checkStatus(samples, lists) {
+      let resultArr = [];
+      let indArr;
+      let result;
+      let tempArr = [];
+      let length = tempArr.length;
+      // loop through the sample
+      if (lists.length >= 3) {
+        for (i = 0; i < samples.length; i++) {
+          indArr = samples[i];
+          for (j = 0; j < lists.length; j++) {
+            result = indArr.find((num) => num === parseInt(lists[j]));
+            tempArr.push(result);
+            lengthArr = tempArr.length;
+            if (tempArr.length == lists.length) {
+              resultArr.push([...tempArr]);
+              tempArr = [];
+            }
+          }
+        } // end of for loop
+        return resultArr;
+      } // end of if statement
+    } // end of function
+
+    function checkBoard(list, player) {
+      let uniqueArr = [];
+      let newUniqueArr = [];
+      finalAns = [];
+      let resArr = checkStatus(boardSamples, list);
+      //console.log(checkStatus(boardSamples, list))
+      resArr &&
+        resArr.forEach((indArr, index) => {
+          uniqueArr.push([...new Set(indArr)]);
+
+          newUniqueArr.push([
+            uniqueArr[index].map((indElem) => typeof indElem === "number"),
+          ]);
+          //console.log(newUniqueArr[index])
+          for (i = 0; i < newUniqueArr[index].length; i++) {
+            for (j = 0; j < newUniqueArr[index][i].length; j++) {
+              //console.log(newUniqueArr[index][i][j])
+              if (newUniqueArr[index][i][j] === true) {
+                newUniqueArr[index][i][j] = "a";
+              } else {
+                newUniqueArr[index][i][j] = "b";
+              }
+            }
+            newUniqueArr[index][i].sort();
+          }
+          //console.log(newUniqueArr[index].join(","));
+          newUniqueArr[index].join(",").includes("a,a,a") &&
+            finalAns.push(newUniqueArr[index], index);
+
+          //console.log(finalNewArray)
+        });
+      return {
+        player: player,
+        winningPoint: boardSamples[finalAns[1]] || "",
+      };
+    }
+
+    let setBoardArrayStatus = (index, status = false) => {
+      boardArray.push({
+        boardNumber: Number(index),
+        status: status,
+      });
+    };
+
+    let victoryUpdate = (index, user, winningPoint) => {
+      infoBox.style.display = "none";
+      victoryBox.innerText = `${user} Wins`;
+      updateScores(index, winningPoint["winningPoint"]);
+    };
+
+    let updateEmptyBoard = (index) => {
+      let newEntry = {
+        boardNumber: Number(index),
+        status: true,
+      };
+      let tempBoardArray = boardArray.filter(
+        (obj) => obj.boardNumber !== Number(index)
+      );
+      tempBoardArray.push(newEntry);
+      boardArray = [...tempBoardArray];
+    };
+
+    let showClickedValue = (
+      e,
+      victoryUpdateIndex,
+      user,
+      updateUserIndex,
+      updateUser
+    ) => {
+      try {
+        currentSymbol = symbol[currentPlayer];
+        e.target.setAttribute("data-id", "not-empty");
+        player2Nums.push(parseInt(e.target.getAttribute("id")));
+        e.target.innerText = currentSymbol;
+        let classNum = checkBoard(player2Nums, victoryUpdateIndex);
+        //console.log('player one', player1Nums, 'player 2', player2Nums)
+        if (player1Nums.concat(player2Nums).length == BOARD_TOTAL) refresh();
+        if (classNum.winningPoint.length !== 0) {
+          victoryUpdate(victoryUpdateIndex, user, classNum);
+        }
+        updateCurrentPlayer(updateUserIndex, updateUser);
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    };
+
+    let handleBoxClick = (e) => {
+      if (checkIfEmpty(e.target) === null) {
+        updateEmptyBoard(e.target.getAttribute("id"));
+        currentSymbol = symbol[currentPlayer];
+        if (currentPlayer == 1) {
+          e.target.setAttribute("data-id", "not-empty");
+          player1Nums.push(parseInt(e.target.getAttribute("id")));
+          e.target.innerText = currentSymbol;
+          if (player1Nums.concat(player2Nums).length == BOARD_TOTAL) refresh();
+          let classNum = checkBoard(player1Nums, 1);
+          if (classNum.winningPoint.length !== 0) {
+            victoryUpdate(1, user1, classNum);
+          }
+          updateCurrentPlayer(2, user2);
+          // console.log(player1Nums, player2Nums, 'first player');
+        } else {
+          if (!isComputer) {
+            showClickedValue(e, 2, user2, 1, user1);
+          }
+        }
+
+      } else {
+        infoBox.innerText = "Try another Box";
+      }
+    };
+
+    let randomBoardNumberCheck = (emptyBoards) => {
+      if (emptyBoards?.length > 0) {
+        let maxNumber = Math.max(
+          ...emptyBoards.map((board) => board.boardNumber)
+        );
+        let randomBoardNumber = Number(
+          Math.floor(Math.random() * maxNumber + 1)
+          );
+          let indexes = player1Nums.concat(player2Nums)
+        if (indexes.includes(randomBoardNumber)) {
+          // console.log('used already ', randomBoardNumber)
+          return randomBoardNumberCheck(emptyBoards);
+        } else {
+          // console.log('new', randomBoardNumber)
+          return randomBoardNumber;
+        }
+      }
+    };
+
+
+    let validWinFnc = () => {
+      let winningMoves = []
+      boardSamples.forEach(samples => {
+        let m = 0
+        player2Nums.forEach(num => {
+          if (samples.indexOf(num) != -1) {
+            m += 1;
+          }
+        });
+        if (m == 2) winningMoves.push({ arr: samples, num: m })
+      })
+      let k = winningMoves.filter(move => move.num = 2)
+      let urgentMove = []
+
+      k.forEach(urg => {
+        let m = 0
+        player1Nums.forEach(num => {
+          // console.log(num, urg.arr);
+          if (urg.arr.indexOf(num) != -1) {
+            m++;
+          }
+        });
+        // console.log(m, urg);
+        if (m == 0) urgentMove.push(urg)
+      });
+
+      return urgentMove || [];
+    }
+
+    let validDefend = () => {
+      let defendMoves1 = [];
+      let defendMoves2 = [];
+
+      for (let j = 0; j < boardSamples.length; j++) {
+        const element = boardSamples[j];
+        let m = 0;
+        for (let n = 0; n < player1Nums.length; n++) {
+          if (element.indexOf(player1Nums[n]) !== -1) {
+            m += 1;
+          }
+        }
+        if (m >= 1) {
+          defendMoves1.push({ "arr": element, "num": m });
+          // console.log(m, element, 'one above');
+        }
+      }
+
+      defendMoves1 = Array.from(new Set(defendMoves1))
+      defendMoves2 = Array.from(new Set(defendMoves2))
+      let k = defendMoves1.filter(move => move.num == 2)
+      let urgent2 = []
+      k.forEach(urg => {
+        let m = 0
+        player2Nums.forEach(num => {
+          if (urg.arr.indexOf(num) != -1) {
+            m++;
+          }
+        });
+        if (m == 0) urgent2.push(urg)
+      });
+
+      return urgent2 || []
+    }
+
+    let applyValidWIn = (urgentMove, index) => {
+      if (urgentMove.length > 0) {
+        let rando; 
+        let checkNumber = () => {
+          let ans = []
+          rando = 0
+          let arr = urgentMove[rando].arr;
+          for (let c = 0; c < arr.length  ; c++) {
+            if (player1Nums.concat(player2Nums).indexOf(arr[c]) === -1) {
+              ans.push(arr[c]);
+            }else{
+            }
+          }
+          // console.log(player1Nums.concat(player2Nums), "empty array");
+          // console.log(ans, " valid win ans")
+          return ans
+        }
+        let move = checkNumber()[0];
+        // console.log(urgentMove, 'urgent move arr')
+        console.log(move, 'valid win')
+        return move;
+        
+      }
+      else {
+        let otherWays = [];
+        boardSamples.forEach(samples => {
+        let m = 0
+        player2Nums.forEach(num => {
+          if (samples.indexOf(num) != -1) {
+            m += 1;
+          }
+        });
+        if (m >= 1) otherWays.push({ arr: samples, num: m })
+      })
+      let k = []
+      otherWays.forEach(urg => {
+        let m = 0
+        player1Nums.forEach(num => {
+          if (urg.arr.indexOf(num) != -1) {
+            m++;
+          }
+        });
+        // console.log(m, urg);
+        if (m == 0) k.push(urg)
+      });
+      if(k.length > 0){
+        let rando; 
+        let checkNumber = () => {
+          let ans = []
+          rando = k.length > 1 ? 1 : 0;
+          if(two_ways_alert == 1){
+          rando = 0;
+          two_ways_alert = 0;
+        }else{
+          rando = rando;
+        }
+          let arr = k[rando].arr;
+          for (let c = 0; c < arr.length  ; c++) {
+            if (player1Nums.concat(player2Nums).indexOf(arr[c]) === -1) {
+              ans.push(arr[c]);
+            }else{
+            }
+          }
+          // console.log(player1Nums.concat(player2Nums), "empty array");
+          // console.log(ans, "other move ans");
+          return ans
+        }
+        if(two_ways_alert == 1){
+          move = checkNumber()[0];
+          two_ways_alert = 0;
+        }else{
+          move = checkNumber()[1];
+        }
+        
+        console.log(k, 'valid play to win array')
+        console.log(move, 'valid play to win')
+        return move;
+        
+      }else{
+        console.log(index, 'normal move');
+        return player1Nums.concat(player2Nums).includes(index) ? randomBoardNumberCheck(boardArray.filter(board => board.status !== true)) : index;
+
+      }
+      }
+    }
+
+    let possibleWins = (index) => {
+      let urgent2 = validDefend()
+      let urgentMove = validWinFnc()
+      if(player1Nums.length == 1 && player1Nums[0] == 5){
+        let blockArray = [1,7];
+        randomBlock = Math.floor(Math.random() * blockArray.length)
+        let move = blockArray[player2Nums[0] == 7 ? blockArray[1] : blockArray[0]]  
+        console.log(move, 'block two ways 5');
+        return move
+      }
+      if(player1Nums.length == 1 && (player1Nums[0] == 1 || player1Nums[0] == 3 || player1Nums[0] == 7 || player1Nums[0] == 9)){
+        let blockArray = [5];
+        randomBlock = Math.floor(Math.random() * blockArray.length)
+        let move = blockArray[randomBlock]  
+        console.log(move, 'block two ways one');
+        return move
+      }
+      if(player1Nums.length == 2 && (player1Nums[0] == 1 || player1Nums[1] == 5)){
+       two_ways_alert = 0;
+      }
+      if(player2Nums.length == 1 && (player2Nums[0] == 8)){
+        let blockArray = [4,6];
+        randomBlock = Math.floor(Math.random() * blockArray.length)
+        let move = blockArray[randomBlock]  
+        console.log(move, 'block two ways 8');
+        return move
+      }
+      if(player1Nums.length == 2 && (player2Nums[0] == 5 || player2Nums[1] == 7)){
+       two_ways_alert++
+      }
+      if(player1Nums.length == 1 && (player1Nums[0] == 1 || player1Nums[0] == 9)){
+       two_ways_alert++
+      }
+      if (urgentMove.length > 0 && urgentMove[0].hasOwnProperty('num') && urgentMove[0].num == 2) {
+        return applyValidWIn(urgentMove, index)
+      }
+
+      if (urgent2.length > 0) {
+        let rando; 
+        let checkNumber = () => {
+          let ans = []
+          rando = 0
+          let arr = urgent2[rando].arr;
+          for (let c = 0; c < arr.length  ; c++) {
+            if (player1Nums.concat(player2Nums).indexOf(arr[c]) === -1) {
+              ans.push(arr[c]);
+            }else{
+            }
+          }
+          // console.log(player1Nums.concat(player2Nums), "empty array");
+          // console.log(ans, 'valid defend ans');
+          return ans
+        }
+        let move = checkNumber()[0];
+        // console.log(urgent2, 'valid defend array')
+        console.log(move, 'valid defend')
+        return move
+      } else {
+        let urgentMove = validWinFnc();
+        return applyValidWIn(urgentMove, index)
+      }
+    };
+    
+    let computerPlay = () => {
+      console.log("computer playing");
+      let emptyBoards = boardArray.filter((board) => board.status === false);
+      boardRandom = randomBoardNumberCheck(emptyBoards)
+      // if (first) {
+      //   player1Nums.concat(player1Nums).includes(5) ? boardRandom = randomBoardNumberCheck(emptyBoards) : boardRandom = 5 ;
+      // }
+
+      first = false;
+      if (boardRandom !== undefined) {
+        boardRandom = possibleWins(boardRandom);
+        compTempNum.push(boardRandom);
+        let e = {};
+       
+        e.target = document.getElementById(boardRandom);
+        updateEmptyBoard(e.target.getAttribute("id"));
+        setTimeout(() => {
+          showClickedValue(e, 2, user2, 1, user1);
+            // console.log(player1Nums, player2Nums, 'second player');
+        }, 1200);
+      } else {
+        for (i = 0; i < box.length; i++) {
+          setBoardArrayStatus(box[i].getAttribute("id"), false);
+        }
+        computerPlay();
+      }
+    };
+    
+    for (i = 0; i < box.length; i++) {
+      setBoardArrayStatus(box[i].getAttribute("id"), false);
+      box[i].addEventListener("click", handleBoxClick);
+    }
+
+  </script>
+</body>
+
+</html>
